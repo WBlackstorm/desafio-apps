@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../model/news.dart';
- import 'dart:convert';
+import 'detail.dart';
+import 'dart:convert';
 
 class HomeView extends StatefulWidget {
 
@@ -15,6 +16,7 @@ class HomeViewState extends State<HomeView> {
 
   List<News> _newsList;
 
+  @override
   initState() {
     _newsList = List<News>();
     _loadAsset().then((value) => {
@@ -24,6 +26,7 @@ class HomeViewState extends State<HomeView> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,17 +40,27 @@ class HomeViewState extends State<HomeView> {
     );
   }    
 
+  // Load listview content
   loadContent() {
     return Container(
       child: ListView.builder(
         itemCount: _newsList.length,
         itemBuilder: (BuildContext context, int index) {
-          return buildItemByIndex(index);
+          return GestureDetector(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DetailsView(news: _newsList[index])),
+              );
+            },
+            child: buildItemByIndex(index),
+          );
         },
       ),
     );
   }
 
+  // Build list item according cell index.
   buildItemByIndex(int index) {
 
     var news = _newsList[index];
@@ -59,6 +72,7 @@ class HomeViewState extends State<HomeView> {
     }
   }
 
+  // Build and load list header cell from news object.
   buildHeader(News news) {
     return Stack(
       children: <Widget>[
@@ -106,31 +120,68 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
+  // Build and load cells with thumbnail and headline from news object.
   buildCell(News news) {
-    return Container(
-      color: Colors.teal,
-      child: Row (
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
         children: <Widget>[
-          buildImage(news),
-          Column (
+          Row (
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(
-                news.section.name,
-                softWrap: false,
-              ),
-              Text(
-                news.title,
-                softWrap: false,
-              ),
+              buildImage(news),
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                  child: Column (
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        news.section.name.toUpperCase(),
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color.fromARGB(255, 162, 181, 190),                    
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        news.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 31, 55, 90),                    
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),          
             ],
-          )
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 10.0
+            ),
+            child: Divider(
+              color: Color.fromARGB(255, 61, 61, 61),
+              height: 1.0,        
+            ),
+          ),
         ],
       ),
     );
   }
 
+  // Load local json file that contains news.
   Future<List<News>> _loadAsset() async {
 
     var _listNews = List<News>();
@@ -145,6 +196,7 @@ class HomeViewState extends State<HomeView> {
     return _listNews;
   }
 
+  // Build image widget from image url or placeholder.
   Image buildImage(News news) {
 
     if (news.images.length == 0) {

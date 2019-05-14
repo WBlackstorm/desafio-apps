@@ -93,7 +93,7 @@ class News {
 
     _images = List<Image>();
     for (var image in jsonDecoded['imagens']) {
-      _images.add(Image(image['autor'], image['fonte'], image['legend'], image['url']));
+      _images.add(Image(image['autor'], image['fonte'], image['legenda'], image['url']));
     }
 
   }
