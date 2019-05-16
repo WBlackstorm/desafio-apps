@@ -10,6 +10,15 @@ class Section {
     return _url;
   }
 
-  Section(this._name, this._url);
+  Section.fromJson(Map<String, dynamic> jsonDecoded) {
+
+    if (jsonDecoded['secao'] == null) {
+      return;
+    }
+
+    _name = jsonDecoded['secao']['nome'];
+    _url = jsonDecoded['secao']['url'];
+    
+  }
 
 }

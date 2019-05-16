@@ -69,7 +69,12 @@ class News {
     return _images;
   }
 
-  News.fromJson(dynamic jsonDecoded) {  
+  News.fromJson(Map<String, dynamic> jsonDecoded) {  
+    
+    if (jsonDecoded.isEmpty) {
+      return;
+    }
+
     _authors = List<String>();
   
     if (jsonDecoded['autores'] != null) {
@@ -85,17 +90,18 @@ class News {
     _id = jsonDecoded['id'];
     _publishedAt = jsonDecoded['publicadoEm'];
     
-    _section = Section(jsonDecoded['secao']['nome'], jsonDecoded['secao']['url']);
+    _section = new Section.fromJson(jsonDecoded);
     _type = jsonDecoded['tipo'];
     _title = jsonDecoded['titulo'];
     _url = jsonDecoded['url'];
     _originalUrl = jsonDecoded['urlOriginal'];
 
     _images = List<Image>();
-    for (var image in jsonDecoded['imagens']) {
-      _images.add(Image(image['autor'], image['fonte'], image['legenda'], image['url']));
+    if (jsonDecoded['imagens'] != null) {
+      for (var image in jsonDecoded['imagens']) {
+        _images.add(Image.fromJson(image));
+      }
     }
-
   }
 
 }

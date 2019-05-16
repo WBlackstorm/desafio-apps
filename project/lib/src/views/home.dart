@@ -185,9 +185,9 @@ class HomeViewState extends State<HomeView> {
   Future<List<News>> _loadAsset() async {
 
     var _listNews = List<News>();
-    var json = await rootBundle.loadString('lib/src/assets/capa.json');
+    var rawJson = await rootBundle.loadString('lib/src/assets/capa.json');
     
-    var jsonDecoded = jsonDecode(json);
+    var jsonDecoded = json.decode(rawJson);
     
     for (var i = 0; i < jsonDecoded[0]['conteudos'].length; i++) {
       _listNews.add(new News.fromJson(jsonDecoded[0]['conteudos'][i]));

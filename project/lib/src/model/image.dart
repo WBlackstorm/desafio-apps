@@ -20,6 +20,11 @@ class Image {
     return _url;
   }
 
-  Image(this._author, this._source, this._description, this._url);
+  Image.fromJson(Map<String, dynamic> jsonDecoded) {
+    _author = jsonDecoded['autor']; 
+    _source =  jsonDecoded['fonte'];
+    _description = jsonDecoded['legenda'];     
+    _url = jsonDecoded['url'];
+  }
 
 }
